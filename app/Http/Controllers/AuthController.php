@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Students;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,6 +31,18 @@ class AuthController extends Controller
         $user->password = Hash::make($request->input('password'));
         $user->role = $request->input('role');
         $user->save();
+        if ($request->role == 3) {
+            Students::create([
+                'user_id' => $user->id,
+                'roll_no' => $request->roll_no,
+                'course_id' => $request->course_id,
+                'semester_id' => $request->semester_id,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'admission_date' => $request->admission_date,
+                'status' => $request->status,
+            ]);
+        }
 
         return redirect()->route('login')
             ->with('success', 'Registration Successful');

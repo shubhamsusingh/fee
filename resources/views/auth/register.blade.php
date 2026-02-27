@@ -23,9 +23,18 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label>User Role</label>
-                    <input type="number" name="role" placeholder="Enter your Role">
-                    {{-- <input type="email" name="email" value="{{ old('email') }}"> --}}
+                    <label>User Role</label><br>
+
+                    <label>
+                        <input type="radio" name="role" value="1" checked onclick="toggleStudentForm()">
+                        Admin (1)
+                    </label>
+
+                    <label>
+                        <input type="radio" name="role" value="3" onclick="toggleStudentForm()">
+                        Student (3)
+                    </label>
+
                     @error('role')
                         <div style="color:red">{{ $message }}</div>
                     @enderror
@@ -56,7 +65,49 @@
                         <div style="color:red">{{ $message }}</div>
                     @enderror
                 </div>
+                <div id="studentFields" style="display:none; margin-top:20px;">
 
+                    <h3>Student Details</h3>
+
+                    <div class="form-group">
+                        <label>Roll No</label>
+                        <input type="text" name="roll_no">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Course ID</label>
+                        <input type="text" name="course_id">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Semester ID</label>
+                        <input type="text" name="semester_id">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="text" name="phone">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Address</label>
+                        <textarea name="address"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Admission Date</label>
+                        <input type="date" name="admission_date">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select name="status">
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
+                    </div>
+
+                </div>
                 <button type="submit" class="btn-primary full-width" style="justify-content: center">
                     Register
                 </button>
@@ -68,7 +119,18 @@
             </form>
         </div>
     </div>
+    <script>
+        function toggleStudentForm() {
+            let role = document.querySelector('input[name="role"]:checked').value;
+            let studentSection = document.getElementById('studentFields');
 
+            if (role == "3") {
+                studentSection.style.display = "block";
+            } else {
+                studentSection.style.display = "none";
+            }
+        }
+    </script>
 </body>
 
 </html>
