@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\paymentController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +18,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/', [DashboardController::class, 'index'])->name('adminDashboard');
     Route::get('/student', [StudentController::class, 'index'])->name('studentDashboard');
-    Route::post('/payment', [paymentController::class, 'index'])->name('payment');
-    Route::get('/sucess', [paymentController::class, 'sucess'])->name('sucess');
+    Route::post('/payment', [PaymentController::class, 'index'])->name('payment');
+    Route::get('/sucess', [PaymentController::class, 'sucess'])->name('sucess');
 });
