@@ -37,10 +37,13 @@
 
             <div class="profile">
                 <div class="profile-text">
-                    <p class="student-name">Alex Thompson</p>
-                    <p class="student-id">ID: 2024-88321</p>
+                    <p class="student-name">{{ Auth::user()->name }}</p>
+                    <p class="student-id">ID:{{ Auth::user()->email }}</p>
                 </div>
-                <img src="profile.jpg" class="profile-img">
+                {{-- <img src="profile.jpg" class="profile-img"> --}}
+                <form action="">
+                    <button class="btn-primary">Logout</button>
+                </form>
             </div>
 
         </div>
