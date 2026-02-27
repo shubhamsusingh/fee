@@ -178,11 +178,14 @@
                     <p class="small-text">
                         Pay your outstanding balance securely using your preferred payment method.
                     </p>
-
-                    <button class="btn-primary full-width">
-                        <span class="material-icons">payments</span>
-                        Pay Fees Online
-                    </button>
+                    <form action="payment" method="POST">
+                        @csrf
+                        <input type="hidden" name="price" value="70">
+                        <button type="submit" class="btn-primary full-width">
+                            <span class="material-icons">payments</span>
+                            Pay Fees Online
+                        </button>
+                    </form>
                 </div>
 
                 <div class="card help-card">
