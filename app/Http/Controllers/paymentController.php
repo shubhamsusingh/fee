@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FeeStructure;
+use App\MOdels\Payment;
+use App\Models\Students;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class PaymentController extends Controller
@@ -49,8 +53,32 @@ class PaymentController extends Controller
         $paypalToken = $provider->getAccessToken();
         $response = $provider->capturePaymentOrder($request->token);
         if (isset($response['status']) && $response['status'] === 'COMPLETED') {
-            echo 'Heloo';
-            exit;
+            $student = Students::where('user_id', Auth::user()->id)->first();
+            $feeStruct = FeeStructure::where([
+                'course_id' => $student->course_id,
+                'semester_id' => $student->semester_id,
+            ])->first();
+            if ($student && $feeStruct) {
+
+                // echo $student->roll_no;
+                // exit;
+                $payment = new Payment;
+                $payment->student_id = $student->id;
+                $payment->fee_structure_id = $feeStruct->id;
+                $payment->amount_paid = $amount = $response['purchase_units'][0]['payments']['captures'][0]['amount']['value'];
+                $payment->payment_mode = 'online';
+                $payment->transaction_id = $response['id'];
+                $payment->payment_date = now()->toDateString();
+                $payment->status = 1;
+                $payment->save();
+
+                return redirect()->route('studentDashboard');
+
+            } else {
+                echo 'fail';
+                exit;
+            }
+
         }
     }
 }
