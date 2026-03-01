@@ -72,8 +72,8 @@
 
             <div class="card">
                 <p class="card-subtitle">Last Payment</p>
-                <h3>$1,200.00</h3>
-                <p class="small-text">Processed on Sept 01, 2024</p>
+                <h3>{{ $lastInstallment['amount'] }}</h3>
+                <p class="small-text">Processed on {{ $lastInstallment['paid_date'] }}</p>
             </div>
 
         </div>
