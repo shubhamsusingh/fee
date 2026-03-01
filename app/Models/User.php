@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Foundation\Auth\User as Authenticatable; // ✅ Required
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable // ✅ Must extend this
+class User extends Authenticatable
 {
     use Notifiable;
 
-    protected $table = 'user'; // ✅ Your custom table name
+    protected $table = 'user';
 
     public $timestamps = false;
 
@@ -19,4 +19,9 @@ class User extends Authenticatable // ✅ Must extend this
         'password',
         'role',
     ];
+
+    public function student()
+    {
+        return $this->hasOne(Students::class);
+    }
 }

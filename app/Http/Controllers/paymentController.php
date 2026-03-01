@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\FeeStructure;
-use App\MOdels\Payment;
+use App\Models\Installement;
+use App\Models\Payment;
+use App\Models\Semester;
 use App\Models\Students;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,6 +50,7 @@ class PaymentController extends Controller
 
     public function sucess(Request $request)
     {
+        $paymentId = 0;
         $provider = new PayPalClient;
         $provider->setApiCredentials(config('paypal'));
         $paypalToken = $provider->getAccessToken();
@@ -62,15 +65,56 @@ class PaymentController extends Controller
 
                 // echo $student->roll_no;
                 // exit;
-                $payment = new Payment;
-                $payment->student_id = $student->id;
-                $payment->fee_structure_id = $feeStruct->id;
-                $payment->amount_paid = $amount = $response['purchase_units'][0]['payments']['captures'][0]['amount']['value'];
-                $payment->payment_mode = 'online';
-                $payment->transaction_id = $response['id'];
-                $payment->payment_date = now()->toDateString();
-                $payment->status = 1;
+                $payment = Payment::where(['student_id' => $student->id, 'fee_structure_id' => $feeStruct->id])->first();
+                $amount = $response['purchase_units'][0]['payments']['captures'][0]['amount']['value'];
+
+                if (! empty($payment)) {
+
+                    $payment->amount_paid += $amount;
+
+                    if ($payment->amount_paid < $feeStruct->total_amount) {
+                        $payment->status = 2;
+                    } else {
+                        $payment->status = 1;
+                    }
+
+                } else {
+
+                    $payment = new Payment;
+                    $payment->student_id = $student->id;
+                    $payment->fee_structure_id = $feeStruct->id;
+                    $payment->amount_paid = $amount;
+                    $payment->payment_mode = 'online';
+                    $payment->transaction_id = $response['id'];
+                    $payment->payment_date = now()->toDateString();
+
+                    if ($amount < $feeStruct->total_amount) {
+                        $payment->status = 2;
+                    } else {
+                        $payment->status = 1;
+                    }
+                }
+                $semester = Semester::where(['course_id' => $student->course_id, 'semester_name' => $feeStruct->id])->first();
+                $payment->due_date = $semester->end_date;
                 $payment->save();
+                $paymentId = $payment->id;
+                $lastInstallment = Installement::where('payment_id', $paymentId)
+                    ->orderBy('installment_no', 'desc')
+                    ->first();
+
+                $installement = new Installement;
+                $installement->payment_id = $paymentId;
+                if (! empty($lastInstallment)) {
+                    $installement->installment_no = $lastInstallment->installment_no + 1;
+                } else {
+                    $installement->installment_no = 1;
+                }
+                $installement->amount = $amount;
+
+                $installement->due_date = $semester->end_date;
+                $installement->paid_date = now()->toDateString();
+                $installement->status = 'paid';
+                $installement->save();
 
                 return redirect()->route('studentDashboard');
 

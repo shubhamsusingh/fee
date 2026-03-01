@@ -19,6 +19,7 @@ class Payment extends Model
         'transaction_id',
         'payment_date',
         'status',
+        'due_date',
     ];
 
     protected $casts = [
@@ -42,5 +43,10 @@ class Payment extends Model
     public function feeStructure()
     {
         return $this->belongsTo(feeStructure::class, 'fee_structure_id');
+    }
+
+    public function installments()
+    {
+        return $this->hasMany(Installment::class);
     }
 }
