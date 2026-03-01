@@ -47,6 +47,6 @@ class Payment extends Model
 
     public function installments()
     {
-        return $this->hasMany(Installment::class);
+        return $this->hasMany(Installement::class);
     }
 }
