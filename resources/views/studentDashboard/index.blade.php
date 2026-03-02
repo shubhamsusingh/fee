@@ -59,7 +59,7 @@
             <div class="card balance-card">
                 <p class="card-subtitle">Outstanding Balance</p>
                 @if ($payment['amount_paid'] < $feeStructure['total_amount'])
-                    <h2 class="balance-amount">{{ $feeStructure['total_amount'] - $payment['amount_paid'] }}</h2>
+                    <h2 class="balance-amount">₹{{ $feeStructure['total_amount'] - $payment['amount_paid'] }}</h2>
                     <div class="badge danger">
                         <span class="material-icons">priority_high</span>
                         Action Required
@@ -96,7 +96,7 @@
 
             <div class="card">
                 <p class="card-subtitle">Last Payment</p>
-                <h3>{{ $lastInstallment['amount'] }}</h3>
+                <h3>₹{{ $lastInstallment['amount'] }}</h3>
                 <p class="small-text">Processed on {{ $lastInstallment['paid_date'] }}</p>
             </div>
 
@@ -108,7 +108,7 @@
             <div>
 
                 {{-- // <!-- Fee Breakdown --> --}}
-                <section class="section">
+                {{-- <section class="section">
                     <div class="section-header">
                         <h2>Fee Breakdown - Semester 1</h2>
                         <button class="btn-link">Download PDF</button>
@@ -158,7 +158,7 @@
                             </tfoot>
                         </table>
                     </div>
-                </section>
+                </section> --}}
 
                 {{-- // <!-- Payment History --> --}}
                 <section class="section">
