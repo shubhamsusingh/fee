@@ -58,17 +58,40 @@
 
             <div class="card balance-card">
                 <p class="card-subtitle">Outstanding Balance</p>
-                <h2 class="balance-amount">$2,450.00</h2>
-                <div class="badge danger">
-                    <span class="material-icons">priority_high</span>
-                    Action Required
-                </div>
+                @if ($payment['amount_paid'] < $feeStructure['total_amount'])
+                    <h2 class="balance-amount">{{ $feeStructure['total_amount'] - $payment['amount_paid'] }}</h2>
+                    <div class="badge danger">
+                        <span class="material-icons">priority_high</span>
+                        Action Required
+                    </div>
+                @else
+                    <div class="badge danger">
+                        Completed
+                    </div>
+                @endif
             </div>
 
             <div class="card">
                 <p class="card-subtitle">Next Due Date</p>
-                <h3>October 15, 2024</h3>
-                <p class="small-text">12 days remaining</p>
+                @php
+                    use Carbon\Carbon;
+
+                    $dueDate = Carbon::parse($payment['due_date']);
+                    $today = Carbon::today();
+                    $daysLeft = $today->diffInDays($dueDate, false);
+                @endphp
+
+                @if ($payment['amount_paid'] < $feeStructure['total_amount'])
+                    <h3>{{ $payment['due_date'] }}</h3>
+
+                    @if ($daysLeft > 0)
+                        <p class="small-text">{{ $daysLeft }} days remaining</p>
+                    @elseif($daysLeft == 0)
+                        <p class="small-text text-warning">Due Today</p>
+                    @else
+                        <p class="small-text text-danger">{{ abs($daysLeft) }} days overdue</p>
+                    @endif
+                @endif
             </div>
 
             <div class="card">
@@ -141,6 +164,7 @@
                 <section class="section">
                     <h2>Recent Payment History</h2>
 
+
                     <div class="card">
                         <table class="table">
                             <thead>
@@ -152,18 +176,29 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Sep 01, 2024</td>
-                                    <td>#TXN-99201</td>
-                                    <td>Visa (•••• 4242)</td>
-                                    <td class="text-right">$1,200.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Aug 15, 2024</td>
-                                    <td>#TXN-98114</td>
-                                    <td>Apple Pay</td>
-                                    <td class="text-right">$450.00</td>
-                                </tr>
+                                @forelse ($installementList as $installement)
+                                    <tr>
+                                        <td>
+                                            {{ \Carbon\Carbon::parse($installement->paid_date)->format('M d, Y') }}
+                                        </td>
+
+                                        <td>
+                                            #{{ $installement->transaction_id }}
+                                        </td>
+
+                                        <td>
+                                            {{ ucfirst($installement->payment_mode) }}
+                                        </td>
+
+                                        <td class="text-right">
+                                            ₹{{ number_format($installement->amount, 2) }}
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center">No Installments Found</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
