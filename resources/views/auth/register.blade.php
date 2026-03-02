@@ -17,7 +17,7 @@
             <form action="register" method="POST">
                 @csrf
                 <div class="form-group">
-                    <label>Full Name</label>
+                    <label>Full Nam</label>
                     <input type="text" name="name" placeholder="Enter your name">
                     @error('name')
                         <div style="color:red">{{ $message }}</div>
