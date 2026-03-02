@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link rel="shortcut icon" href="{{ asset('assets/image/fabicon.png') }}" type="image/x-icon" />
     <link rel="stylesheet" href="{{ asset('assets/css/student.css') }}">
 </head>
 
