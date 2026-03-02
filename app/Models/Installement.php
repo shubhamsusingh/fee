@@ -17,6 +17,8 @@ class Installement extends Model
         'amount',
         'paid_date',
         'status',
+        'transaction_id',
+        'payment_mode',
     ];
 
     public function payment()

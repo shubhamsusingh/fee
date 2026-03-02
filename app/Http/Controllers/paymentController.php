@@ -114,6 +114,8 @@ class PaymentController extends Controller
                 $installement->due_date = $semester->end_date;
                 $installement->paid_date = now()->toDateString();
                 $installement->status = 'paid';
+                $installement->transaction_id = $response['id'];
+                $installement->payment_mode = 'online';
                 $installement->save();
 
                 return redirect()->route('studentDashboard');
